@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Net;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Web;
 using System.Web.Mvc;
 using CarlInsurance.Models;
+using Microsoft.Ajax.Utilities;
 
 namespace CarlInsurance.Controllers
 {
@@ -124,24 +128,52 @@ namespace CarlInsurance.Controllers
             base.Dispose(disposing);
         }
 
-        public int InsuranceQuote()
+        public ActionResult InsuranceQuote()
         {
-            int basic = 50;
-            if (User.Age <= 18)
+            //DateTime now = (Insuree.DateOfBirth)
+            //int Years = new DateTime(DateTime.Now.Subtract(DateOfBirth).Ticks).Year - 1;
+            //DateTime Age = DateOfBirth.AddYears(Years);
+
+            var Age = DateTime.Now.Year;
+            Age = 
+            
+
+                int basic = 50;
+            if (Insuree.Age <= 18)
             {
                int x = (basic + 100);
+                return (x);
             }
-            if( User.Age > 19 || User.Age < 25)
+             else if( Insuree.Age > 19 && Insuree.Age < 25)
             {
                 int x = (basic + 50);
+                return (x);
             } 
              
-            if (User.Age > 40)
+            else if (Insuree.Age > 25)
             {
                 int x = (basic + 25);
+                return (x);
             }
 
+            if (Insuree.CarYear < 2000)
+            {
+                int y = (x + 25);
+            }
+            if (Insuree.CarYear > 2015)
+            {
+                int y = (x + 25);
+            }
 
+            if (Insuree.CarMake == "Porsche")
+            {
+                int z = (y + 25);
+            }
+            if (Insuree.CarMake == "Porsche" && Insuree.CarModel = "911 Carrera")
+            {
+                int a = (z + 25);
+            }
+            return (z);
         }
 
     }
