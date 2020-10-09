@@ -18,6 +18,8 @@ namespace CarlInsurance.Controllers
     {
         private InsuranceEntities db = new InsuranceEntities();
 
+        public object ApplicationDBContext { get; private set; }
+
         // GET: Insuree
         public ActionResult Index()
         {
@@ -52,8 +54,61 @@ namespace CarlInsurance.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,FirstName,LastName,EmailAddress,DateOfBirth,CarYear,CarMake,CarModel,DUI,SpeedingTickets,CoverageType,Quote")] Insuree insuree)
         {
+
+
             if (ModelState.IsValid)
             {
+                var Age = DateTime.Now.Year - insuree.DateOfBirth.Year;
+
+                int basic = 50;
+                if (Age <= 18)
+                {
+                    basic += 100;
+
+                }
+                else if (Age > 19 && Age < 25)
+                {
+                    basic += 50;
+
+                }
+
+                else if (Age > 25)
+                {
+                    basic += 25;
+
+                }
+
+                if (insuree.CarYear < 2000)
+                {
+                    basic += 25;
+                }
+                else if (insuree.CarYear > 2015)
+                {
+                    basic += 25;
+                }
+
+                if (insuree.CarMake.ToLower() == "porsche")
+                {
+                    basic += 25;
+                }
+                else if (insuree.CarMake.ToLower() == "porsche" && insuree.CarModel.ToLower() == "911 carrera")
+                {
+                    basic += 25;
+                }
+
+                if (insuree.SpeedingTickets > 0)
+                {
+                    basic += insuree.SpeedingTickets * 10;
+                }
+                if (insuree.DUI == true)
+                {
+                    basic += basic / 4;
+                }
+                if (insuree.CoverageType == true)
+                {
+                    basic += basic / 2;
+                }
+                 insuree.Quote = basic;
                 db.Insurees.Add(insuree);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -61,6 +116,14 @@ namespace CarlInsurance.Controllers
 
             return View(insuree);
         }
+            
+
+
+               
+            
+
+            
+        
 
         // GET: Insuree/Edit/5
         public ActionResult Edit(int? id)
@@ -86,6 +149,58 @@ namespace CarlInsurance.Controllers
         {
             if (ModelState.IsValid)
             {
+
+                var Age = DateTime.Now.Year - insuree.DateOfBirth.Year;
+
+                int basic = 50;
+                if (Age <= 18)
+                {
+                    basic += 100;
+
+                }
+                else if (Age > 19 && Age < 25)
+                {
+                    basic += 50;
+
+                }
+
+                else if (Age > 25)
+                {
+                    basic += 25;
+
+                }
+
+                if (insuree.CarYear < 2000)
+                {
+
+                }
+                else if (insuree.CarYear > 2015)
+                {
+                    basic += 25;
+                }
+
+                if (insuree.CarMake.ToLower() == "porsche")
+                {
+                    basic += 25;
+                }
+                else if (insuree.CarMake.ToLower() == "porsche" && insuree.CarModel.ToLower() == "911 carrera")
+                {
+                    basic += 25;
+                }
+
+                if (insuree.SpeedingTickets > 0)
+                {
+                    basic += insuree.SpeedingTickets * 10;
+                }
+                if (insuree.DUI == true)
+                {
+                    insuree.Quote += insuree.Quote / 4;
+                }
+                if (insuree.CoverageType == true)
+                {
+                    insuree.Quote += insuree.Quote / 2;
+                }
+
                 db.Entry(insuree).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -128,54 +243,18 @@ namespace CarlInsurance.Controllers
             base.Dispose(disposing);
         }
 
-        public ActionResult InsuranceQuote()
+        public ActionResult Admin()
         {
-            //DateTime now = (Insuree.DateOfBirth)
-            //int Years = new DateTime(DateTime.Now.Subtract(DateOfBirth).Ticks).Year - 1;
-            //DateTime Age = DateOfBirth.AddYears(Years);
-
-            var Age = DateTime.Now.Year;
-            Age = 
             
-
-                int basic = 50;
-            if (Insuree.Age <= 18)
-            {
-               int x = (basic + 100);
-                return (x);
-            }
-             else if( Insuree.Age > 19 && Insuree.Age < 25)
-            {
-                int x = (basic + 50);
-                return (x);
-            } 
-             
-            else if (Insuree.Age > 25)
-            {
-                int x = (basic + 25);
-                return (x);
-            }
-
-            if (Insuree.CarYear < 2000)
-            {
-                int y = (x + 25);
-            }
-            if (Insuree.CarYear > 2015)
-            {
-                int y = (x + 25);
-            }
-
-            if (Insuree.CarMake == "Porsche")
-            {
-                int z = (y + 25);
-            }
-            if (Insuree.CarMake == "Porsche" && Insuree.CarModel = "911 Carrera")
-            {
-                int a = (z + 25);
-            }
-            return (z);
+            return View(db.Insurees);
         }
 
-    }
 
+    }
 }
+
+           
+
+    
+
+
